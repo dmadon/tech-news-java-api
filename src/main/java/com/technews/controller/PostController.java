@@ -35,7 +35,7 @@ public class PostController {
 
     @GetMapping("/api/posts/{id}")
     public Post getPost(@PathVariable Integer id){
-        Post returnPost = repository.getById(id);
+        Post returnPost = repository.getById(id); // Note: getById is deprecated, documentation for JpaRepository methods says to use getReferenceById instead
         returnPost.setVoteCount(voteRepository.countVotesByPostId(returnPost.getId()));
         return returnPost;
     }
@@ -49,7 +49,7 @@ public class PostController {
 
     @PutMapping("/api/posts/{id}")
     public Post updatePost(@PathVariable int id, @RequestBody Post post){
-        Post tempPost = repository.getById(id);
+        Post tempPost = repository.getById(id); // Note: getById is deprecated, documentation for JpaRepository methods says to use getReferenceById instead
         tempPost.setTitle(post.getTitle());
         return repository.save(tempPost);
     }
@@ -60,17 +60,17 @@ public class PostController {
 
         if(request.getSession(false) != null){
             Post returnPost = null;
-
             User sessionUser = (User) request.getSession().getAttribute("SESSION_USER");
+
             vote.setUserId(sessionUser.getId());
             voteRepository.save(vote);
-            returnPost = repository.getById(vote.getPostId());
+            returnPost = repository.getById(vote.getPostId()); // Note: getById is deprecated, documentation for JpaRepository methods says to use getReferenceById instead
             returnPost.setVoteCount(voteRepository.countVotesByPostId(vote.getPostId()));
 
             returnValue = "";
         }
         else{
-            returnValue = "login";
+            returnValue = "Please login";
         }
         return returnValue;
     }
